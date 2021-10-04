@@ -1,6 +1,6 @@
 import math
 
-block_size = 16 # intiate the size of the block
+block_size = 16 # initiate the size of the block
 
 S = [
 41, 46, 67, 201, 162, 216, 124, 1, 61, 54, 84, 161, 236, 240, 6, 19,
@@ -32,9 +32,9 @@ val = val + padding # the val is then set to itself with the padding added on
 
 num = 0 # num variable set to 0
 check_sum = 16 * [0] # the checksum is set to 16 0's
-block = math.ceil(len(val) / block_size) # a block is set to the rounded up answer to the length of the value divided by the block size
+block = math.ceil(len(val) / block_size) # a block is set to the rounded up answer of the length of the value divided by the block size
 
-for x in range(block): # now we are double looping through the block
+for x in range(block): # now we are double looping through a block and block size number of times
     for y in range(block_size): 
         num = S[(val[x*block_size+y] ^ num)] ^ check_sum[y] # the num is set to the number in the S array that corresponds with the x muliplied by the block size plus y raised to the power of num, and then that number is raised to the power of the value of checksum at index y
         check_sum[y] = num # checksum of index y is now set to that num
@@ -52,7 +52,7 @@ for x in range(block): # another double loop through the block and then the bloc
 
     for y in range(18): # double for loop through 18 and then 48
         for z in range(48):
-            checktemp = val_digest[z] ^ S[checktemp] # checktemp is set to the z index of the val difest raised to the power of the value of S at index checktemp
+            checktemp = val_digest[z] ^ S[checktemp] # checktemp is set to the z index of the val digest raised to the power of the value of S at index checktemp
             val_digest[z] = checktemp # the val digest of z is set to checktemp
         checktemp = (checktemp+y) % 256 # checktemp is then set to checktemp plus y raised to the power of 256
 
