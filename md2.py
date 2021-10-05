@@ -1,6 +1,6 @@
 import math
 
-def md2_hash():
+def md2_hash(input):
     block_size = 16 # initiate the size of the block
 
     S = [
@@ -23,7 +23,7 @@ def md2_hash():
 
     # this is a predetermined set of numbers from pi that is used to generate the hash
 
-    val = input("Enter a value to convert to MD2: ") # enter an input that is stored in val
+    val = input # enter an input that is stored in val
 
     val = [ord(i) for i in val] # orders the ascii characters 
 
