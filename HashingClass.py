@@ -191,6 +191,9 @@ class Hashing:
     
     def md5_hash(input):
         return(0)
+    
+    def md6_hash(input):
+        return(0)
 
     def sha0_hash(input):
         return(0)
