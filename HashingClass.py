@@ -189,3 +189,18 @@ class Hashing:
 
         return("".join(map(lambda x: hex(x).lstrip("0x"), val_digest))) # returns the hex representation of the digest 
     
+    def md5_hash(input):
+        return(0)
+
+    def sha0_hash(input):
+        return(0)
+
+    def sha1_hash(input):
+        return(0)
+
+    def sha2_hash(input):
+        return(0)
+
+    def sha3_hash(input):
+        return(0)
+    
