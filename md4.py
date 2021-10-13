@@ -2,12 +2,12 @@ import math
 
 def md4_hash(input):
     block_size = 64 # initiate a block size of 64
-    padding = [
-    128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    # initiate the padding
+    
+    padding = [128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                # initiate the padding
 
     val = input # the value will be set to the parameter passed in
 
@@ -46,6 +46,10 @@ def md4_hash(input):
             processed_block.append((data[i]) | ((data[i+1]) << 8) | ((data[i+2]) << 16) | ((data[i+3]) << 24)) # the data in the block is then changed using different logic manipulations
         return(processed_block)
 
+    hex_val_one = 0x100000000
+    hex_val_two = 0x5A827999
+    hex_val_three = 0x6ED9EBA1
+
     for i in range(math.ceil(len(val) / block_size)): # loops through and sets block equal to the decoded information
         block = decode(val[i*block_size:(i+1)*block_size])
 
@@ -55,72 +59,72 @@ def md4_hash(input):
         var_four = word_four # fourth fourth
 
         # first round of the process
-        word_one = logic_func_four((word_one + logic_func_one(word_two, word_three, word_four) + block[0]) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_one(word_one, word_two, word_three) + block[1]) % 0x100000000 , 7)
-        word_three = logic_func_four((word_three + logic_func_one(word_four, word_one, word_two) + block[2]) % 0x100000000 , 11)
-        word_two = logic_func_four((word_two + logic_func_one(word_three, word_four, word_one) + block[3]) % 0x100000000 , 19)
+        word_one = logic_func_four((word_one + logic_func_one(word_two, word_three, word_four) + block[0]) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_one(word_one, word_two, word_three) + block[1]) % hex_val_one , 7)
+        word_three = logic_func_four((word_three + logic_func_one(word_four, word_one, word_two) + block[2]) % hex_val_one , 11)
+        word_two = logic_func_four((word_two + logic_func_one(word_three, word_four, word_one) + block[3]) % hex_val_one , 19)
 
-        word_one = logic_func_four((word_one + logic_func_one(word_two, word_three, word_four) + block[4]) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_one(word_one, word_two, word_three) + block[5]) % 0x100000000 , 7)
-        word_three = logic_func_four((word_three + logic_func_one(word_four, word_one, word_two) + block[6]) % 0x100000000 , 11)
-        word_two = logic_func_four((word_two + logic_func_one(word_three, word_four, word_one) + block[7]) % 0x100000000 , 19)
+        word_one = logic_func_four((word_one + logic_func_one(word_two, word_three, word_four) + block[4]) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_one(word_one, word_two, word_three) + block[5]) % hex_val_one , 7)
+        word_three = logic_func_four((word_three + logic_func_one(word_four, word_one, word_two) + block[6]) % hex_val_one , 11)
+        word_two = logic_func_four((word_two + logic_func_one(word_three, word_four, word_one) + block[7]) % hex_val_one , 19)
 
-        word_one = logic_func_four((word_one + logic_func_one(word_two, word_three, word_four) + block[8]) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_one(word_one, word_two, word_three) + block[9]) % 0x100000000 , 7)
-        word_three = logic_func_four((word_three + logic_func_one(word_four, word_one, word_two) + block[10]) % 0x100000000 , 11)
-        word_two = logic_func_four((word_two + logic_func_one(word_three, word_four, word_one) + block[11]) % 0x100000000 , 19)
+        word_one = logic_func_four((word_one + logic_func_one(word_two, word_three, word_four) + block[8]) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_one(word_one, word_two, word_three) + block[9]) % hex_val_one , 7)
+        word_three = logic_func_four((word_three + logic_func_one(word_four, word_one, word_two) + block[10]) % hex_val_one , 11)
+        word_two = logic_func_four((word_two + logic_func_one(word_three, word_four, word_one) + block[11]) % hex_val_one , 19)
 
-        word_one = logic_func_four((word_one + logic_func_one(word_two, word_three, word_four) + block[12]) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_one(word_one, word_two, word_three) + block[13]) % 0x100000000 , 7)
-        word_three = logic_func_four((word_three + logic_func_one(word_four, word_one, word_two) + block[14]) % 0x100000000 , 11)
-        word_two = logic_func_four((word_two + logic_func_one(word_three, word_four, word_one) + block[15]) % 0x100000000 , 19)
+        word_one = logic_func_four((word_one + logic_func_one(word_two, word_three, word_four) + block[12]) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_one(word_one, word_two, word_three) + block[13]) % hex_val_one , 7)
+        word_three = logic_func_four((word_three + logic_func_one(word_four, word_one, word_two) + block[14]) % hex_val_one , 11)
+        word_two = logic_func_four((word_two + logic_func_one(word_three, word_four, word_one) + block[15]) % hex_val_one , 19)
 
         # second round
-        word_one = logic_func_four((word_one + logic_func_two(word_two, word_three, word_four) + block[0] + 0x5A827999) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_two(word_one, word_two, word_three) + block[4] + 0x5A827999) % 0x100000000 , 5)
-        word_three = logic_func_four((word_three + logic_func_two(word_four, word_one, word_two) + block[8] + 0x5A827999) % 0x100000000 , 9)
-        word_two = logic_func_four((word_two + logic_func_two(word_three, word_four, word_one) + block[12] + 0x5A827999) % 0x100000000 , 13)
+        word_one = logic_func_four((word_one + logic_func_two(word_two, word_three, word_four) + block[0] + hex_val_two) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_two(word_one, word_two, word_three) + block[4] + hex_val_two) % hex_val_one , 5)
+        word_three = logic_func_four((word_three + logic_func_two(word_four, word_one, word_two) + block[8] + hex_val_two) % hex_val_one , 9)
+        word_two = logic_func_four((word_two + logic_func_two(word_three, word_four, word_one) + block[12] + hex_val_two) % hex_val_one , 13)
 
-        word_one = logic_func_four((word_one + logic_func_two(word_two, word_three, word_four) + block[1] + 0x5A827999) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_two(word_one, word_two, word_three) + block[5] + 0x5A827999) % 0x100000000 , 5)
-        word_three = logic_func_four((word_three + logic_func_two(word_four, word_one, word_two) + block[9] + 0x5A827999) % 0x100000000 , 9)
-        word_two = logic_func_four((word_two + logic_func_two(word_three, word_four, word_one) + block[13] + 0x5A827999) % 0x100000000 , 13)
+        word_one = logic_func_four((word_one + logic_func_two(word_two, word_three, word_four) + block[1] + hex_val_two) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_two(word_one, word_two, word_three) + block[5] + hex_val_two) % hex_val_one , 5)
+        word_three = logic_func_four((word_three + logic_func_two(word_four, word_one, word_two) + block[9] + hex_val_two) % hex_val_one , 9)
+        word_two = logic_func_four((word_two + logic_func_two(word_three, word_four, word_one) + block[13] + hex_val_two) % hex_val_one , 13)
 
-        word_one = logic_func_four((word_one + logic_func_two(word_two, word_three, word_four) + block[2] + 0x5A827999) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_two(word_one, word_two, word_three) + block[6] + 0x5A827999) % 0x100000000 , 5)
-        word_three = logic_func_four((word_three + logic_func_two(word_four, word_one, word_two) + block[10] + 0x5A827999) % 0x100000000 , 9)
-        word_two = logic_func_four((word_two + logic_func_two(word_three, word_four, word_one) + block[14] + 0x5A827999) % 0x100000000 , 13)
+        word_one = logic_func_four((word_one + logic_func_two(word_two, word_three, word_four) + block[2] + hex_val_two) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_two(word_one, word_two, word_three) + block[6] + hex_val_two) % hex_val_one , 5)
+        word_three = logic_func_four((word_three + logic_func_two(word_four, word_one, word_two) + block[10] + hex_val_two) % hex_val_one , 9)
+        word_two = logic_func_four((word_two + logic_func_two(word_three, word_four, word_one) + block[14] + hex_val_two) % hex_val_one , 13)
 
-        word_one = logic_func_four((word_one + logic_func_two(word_two, word_three, word_four) + block[3] + 0x5A827999) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_two(word_one, word_two, word_three) + block[7] + 0x5A827999) % 0x100000000 , 5)
-        word_three = logic_func_four((word_three + logic_func_two(word_four, word_one, word_two) + block[11] + 0x5A827999) % 0x100000000 , 9)
-        word_two = logic_func_four((word_two + logic_func_two(word_three, word_four, word_one) + block[15] + 0x5A827999) % 0x100000000 , 13)
+        word_one = logic_func_four((word_one + logic_func_two(word_two, word_three, word_four) + block[3] + hex_val_two) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_two(word_one, word_two, word_three) + block[7] + hex_val_two) % hex_val_one , 5)
+        word_three = logic_func_four((word_three + logic_func_two(word_four, word_one, word_two) + block[11] + hex_val_two) % hex_val_one , 9)
+        word_two = logic_func_four((word_two + logic_func_two(word_three, word_four, word_one) + block[15] + hex_val_two) % hex_val_one , 13)
 
         # third round
-        word_one = logic_func_four((word_one + logic_func_three(word_two, word_three, word_four) + block[0] + 0x6ED9EBA1) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_three(word_one, word_two, word_three) + block[8] + 0x6ED9EBA1) % 0x100000000 , 9)
-        word_three = logic_func_four((word_three + logic_func_three(word_four, word_one, word_two) + block[4] + 0x6ED9EBA1) % 0x100000000 , 11)
-        word_two = logic_func_four((word_two + logic_func_three(word_three, word_four, word_one) + block[12] + 0x6ED9EBA1) % 0x100000000 , 15)
+        word_one = logic_func_four((word_one + logic_func_three(word_two, word_three, word_four) + block[0] + hex_val_three) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_three(word_one, word_two, word_three) + block[8] + hex_val_three) % hex_val_one , 9)
+        word_three = logic_func_four((word_three + logic_func_three(word_four, word_one, word_two) + block[4] + hex_val_three) % hex_val_one , 11)
+        word_two = logic_func_four((word_two + logic_func_three(word_three, word_four, word_one) + block[12] + hex_val_three) % hex_val_one , 15)
 
-        word_one = logic_func_four((word_one + logic_func_three(word_two, word_three, word_four) + block[2] + 0x6ED9EBA1) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_three(word_one, word_two, word_three) + block[10] + 0x6ED9EBA1) % 0x100000000 , 9)
-        word_three = logic_func_four((word_three + logic_func_three(word_four, word_one, word_two) + block[6] + 0x6ED9EBA1) % 0x100000000 , 11)
-        word_two = logic_func_four((word_two + logic_func_three(word_three, word_four, word_one) + block[14] + 0x6ED9EBA1) % 0x100000000 , 15)
+        word_one = logic_func_four((word_one + logic_func_three(word_two, word_three, word_four) + block[2] + hex_val_three) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_three(word_one, word_two, word_three) + block[10] + hex_val_three) % hex_val_one , 9)
+        word_three = logic_func_four((word_three + logic_func_three(word_four, word_one, word_two) + block[6] + hex_val_three) % hex_val_one , 11)
+        word_two = logic_func_four((word_two + logic_func_three(word_three, word_four, word_one) + block[14] + hex_val_three) % hex_val_one , 15)
 
-        word_one = logic_func_four((word_one + logic_func_three(word_two, word_three, word_four) + block[1] + 0x6ED9EBA1) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_three(word_one, word_two, word_three) + block[9] + 0x6ED9EBA1) % 0x100000000 , 9)
-        word_three = logic_func_four((word_three + logic_func_three(word_four, word_one, word_two) + block[5] + 0x6ED9EBA1) % 0x100000000 , 11)
-        word_two = logic_func_four((word_two + logic_func_three(word_three, word_four, word_one) + block[13] + 0x6ED9EBA1) % 0x100000000 , 15)
+        word_one = logic_func_four((word_one + logic_func_three(word_two, word_three, word_four) + block[1] + hex_val_three) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_three(word_one, word_two, word_three) + block[9] + hex_val_three) % hex_val_one , 9)
+        word_three = logic_func_four((word_three + logic_func_three(word_four, word_one, word_two) + block[5] + hex_val_three) % hex_val_one , 11)
+        word_two = logic_func_four((word_two + logic_func_three(word_three, word_four, word_one) + block[13] + hex_val_three) % hex_val_one , 15)
 
-        word_one = logic_func_four((word_one + logic_func_three(word_two, word_three, word_four) + block[3] + 0x6ED9EBA1) % 0x100000000 , 3)
-        word_four = logic_func_four((word_four + logic_func_three(word_one, word_two, word_three) + block[11] + 0x6ED9EBA1) % 0x100000000 , 9)
-        word_three = logic_func_four((word_three + logic_func_three(word_four, word_one, word_two) + block[7] + 0x6ED9EBA1) % 0x100000000 , 11)
-        word_two = logic_func_four((word_two + logic_func_three(word_three, word_four, word_one) + block[15] + 0x6ED9EBA1) % 0x100000000 , 15)
+        word_one = logic_func_four((word_one + logic_func_three(word_two, word_three, word_four) + block[3] + hex_val_three) % hex_val_one , 3)
+        word_four = logic_func_four((word_four + logic_func_three(word_one, word_two, word_three) + block[11] + hex_val_three) % hex_val_one , 9)
+        word_three = logic_func_four((word_three + logic_func_three(word_four, word_one, word_two) + block[7] + hex_val_three) % hex_val_one , 11)
+        word_two = logic_func_four((word_two + logic_func_three(word_three, word_four, word_one) + block[15] + hex_val_three) % hex_val_one , 15)
 
-        word_one = (word_one + var_one) % 0x100000000 # the words are then changed again to themselves plus their respective variable mod 0x100000000
-        word_two = (word_two + var_two) % 0x100000000 
-        word_three = (word_three + var_three) % 0x100000000 
-        word_four = (word_four + var_four) % 0x100000000 
+        word_one = (word_one + var_one) % hex_val_one # the words are then changed again to themselves plus their respective variable mod hex_val_one
+        word_two = (word_two + var_two) % hex_val_one 
+        word_three = (word_three + var_three) % hex_val_one 
+        word_four = (word_four + var_four) % hex_val_one 
 
     val_digest = word_one.to_bytes(8, 'little') # the digest is then set to word one, two, three, and four added to eachother, all in bytes
     val_digest += word_two.to_bytes(8, 'little')
