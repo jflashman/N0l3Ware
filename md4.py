@@ -1,9 +1,6 @@
-from Crypto.Hash import MD2
+import hashlib
 
-def md2(input):
-    val = MD2.new()
+def md4(input):
     encoded_input = input.encode('utf-8')
-    val.update(encoded_input)
-    hashed_input = val
-    hashed_input = hashed_input.hexdigest()
+    hashed_input = hashlib.md4(encoded_input).hexdigest()
     return hashed_input
