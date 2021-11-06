@@ -1,4 +1,3 @@
-import numpy as np
 from collections import Counter
 from matplotlib import pyplot as plt
 
@@ -11,13 +10,8 @@ def freq(input):
         keys.append(str(item))
 
     for item in c.values():
-        values.append(str(item))
+        values.append(int(item))
 
-    
-  
-    plt.hist(keys, values, color='g')
+    plt.yticks(range(len(values)))
+    plt.bar(keys, values, align='center')
     plt.show()
-
-
-if __name__ == "__main__":
-    freq("Hello World!")
