@@ -1,3 +1,6 @@
+# pip install matplotlib
+
+
 from collections import Counter
 from matplotlib import pyplot as plt
 
