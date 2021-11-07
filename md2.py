@@ -1,3 +1,5 @@
+# pip install cryptohash
+
 from Crypto.Hash import MD2
 
 def md2(input):

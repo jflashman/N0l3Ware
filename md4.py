@@ -1,3 +1,5 @@
+# pip install hashlib
+
 import hashlib
 
 def md4(input):
