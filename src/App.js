@@ -4,8 +4,16 @@ import { Container, Grid, Typography, TextField, Button, Link, List, ListItemBut
 function App() {
 
   const [selectedFunctions, setSelectedFunctions] = useState(false);
+  const [userInput, setUserInput] = useState("");
+  const [output, setOutput] = useState("");
 
-  
+  const handleSubmit = () =>{
+    console.log(userInput);
+    setOutput(userInput);
+    console.log(output);
+  }
+
+
   return (
       <div>
         <style jsx global>{`
@@ -19,10 +27,11 @@ function App() {
         <TopBar />
         <div style={styles.main}>
           <FunctionSelect {...{ selectedFunctions, setSelectedFunctions }} />
-          <Recipe  {...{ setSelectedFunctions, selectedFunctions }}/>
+          <Recipe  {...{ setSelectedFunctions, selectedFunctions, handleSubmit }}/>
+
           <div style={styles.input}>
-            <Input />
-            <Output />
+            <Input {...{ userInput, setUserInput}}/>
+            <Output {...{ userInput, output }} />
           </div>
         </div>
       </div>
@@ -61,7 +70,7 @@ const FunctionSelect = ({ setSelectedFunctions, selectedFunctions }) =>{
   );
 }
 
-const Recipe = ({ setSelectedFunctions, selectedFunctions }) =>{
+const Recipe = ({ setSelectedFunctions, selectedFunctions, handleSubmit }) =>{
   return(
     <div style={styles.recipe}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px', backgroundColor: '#f5f5f5'}}>Recipe</Typography>
@@ -70,31 +79,41 @@ const Recipe = ({ setSelectedFunctions, selectedFunctions }) =>{
       </div>
       <div style={styles.btnContainer}>
         <Typography>Step</Typography>
-        <Button sx={{color: 'white', backgroundColor:'#47bf5b', height: '80%', width: '50%', fontSize: '2rem' }}>Bake!</Button>
+
+        <Button sx=
+        {{color: 'white',
+          backgroundColor:'#47bf5b',
+          height: '80%',
+          width: '50%',
+          fontSize: '2rem' }}
+          onClick={handleSubmit}
+          >Bake!</Button>
+
         <Typography>AutoBake</Typography>
-
       </div>
-
     </div>
-    
   );
 }
 
-const Input = () => {
+const Input = ({userInput, setUserInput}) => {
   return(
     <div style={styles.inputSection}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px', backgroundColor: '#f5f5f5'}}>Input</Typography>
-
+      <TextField sx={{ height: '100%', width: '100%'}} multiline rows={12}
+        onChange={(e,v) => setUserInput(e.target.value)}
+        value={userInput}></TextField>
     </div>
   );
 
 }
 
-const Output = () => {
+const Output = ({output}) => {
   return(
     <div style={styles.inputSection}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px', backgroundColor: '#f5f5f5'}}>Output</Typography>
-
+      <TextField disabled sx={{ height: '100%', width: '100%'}}
+        multiline rows={12}
+        value={output}></TextField>
     </div>
   );
 
