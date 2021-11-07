@@ -1,3 +1,5 @@
+# pip install hashlib
+
 import hashlib
 
 def sha512(input):
