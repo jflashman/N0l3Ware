@@ -3,7 +3,7 @@ import { Container, Grid, Typography, TextField, Button, Link, List, ListItemBut
 import hash from 'js-crypto-hash';
 function App() {
 
-  const [selectedFunctions, setSelectedFunctions] = useState(false);
+  const [selectedFunctions, setSelectedFunctions] = useState("");
   const [userInput, setUserInput] = useState("");
   const [output, setOutput] = useState();
 
@@ -13,6 +13,10 @@ function App() {
     console.log(output);
   }
 
+  const handleChange = (e, value) =>{
+    console.log(e, value);
+    setSelectedFunctions(selectedFunctions === value ? null : value)
+  }
 
   return (
       <div>
@@ -26,7 +30,7 @@ function App() {
         `}</style>
         <TopBar />
         <div style={styles.main}>
-          <FunctionSelect {...{ selectedFunctions, setSelectedFunctions }} />
+          <FunctionSelect {...{ selectedFunctions, setSelectedFunctions, handleChange }} />
           <Recipe  {...{ setSelectedFunctions, selectedFunctions, handleSubmit, userInput }}/>
 
           <div style={styles.input}>
@@ -56,14 +60,23 @@ const TopBar = () => {
 
 }
 
-const FunctionSelect = ({ setSelectedFunctions, selectedFunctions }) =>{
+const FunctionSelect = ({ setSelectedFunctions, selectedFunctions, handleChange }) =>{
 
   return (
     <div style={styles.functions}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px'}}>Operations</Typography>
       <List>
-          <ListItemButton onClick={() => setSelectedFunctions(!selectedFunctions)}>
+          <ListItemButton onClick={(e, value) => handleChange(e, "MD2 Hashing")}>
             <Typography color='blue'>MD2 Hashing</Typography>
+          </ListItemButton>
+          <ListItemButton  onClick={(e) =>  handleChange(e,"Translations")}>
+            <Typography color='blue'>Translations +</Typography>
+          </ListItemButton>
+          <ListItemButton  onClick={(e) =>  handleChange(e,"Image Conversion")}>
+            <Typography color='blue'>Image Conversion</Typography>
+          </ListItemButton>
+          <ListItemButton onClick={(e) =>  handleChange(e,"Encryption")}>
+            <Typography color='blue'>Encryption +</Typography>
           </ListItemButton>
       </List>
     </div>
@@ -75,7 +88,7 @@ const Recipe = ({ setSelectedFunctions, selectedFunctions, handleSubmit,userInpu
     <div style={styles.recipe}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px', backgroundColor: '#f5f5f5'}}>Recipe</Typography>
       <div style={{ height: '85%'}}>
-        {selectedFunctions && <Typography>MD2 Hash</Typography>}
+        {selectedFunctions && <Typography>{selectedFunctions}</Typography>}
       </div>
       <div style={styles.btnContainer}>
         <Typography>Step</Typography>
