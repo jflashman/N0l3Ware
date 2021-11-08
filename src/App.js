@@ -1,11 +1,23 @@
 import { useState } from 'react';
 import { Container, Grid, Typography, TextField, Button, Link, List, ListItemButton} from '@mui/material';
-
+import hash from 'js-crypto-hash';
 function App() {
 
-  const [selectedFunctions, setSelectedFunctions] = useState(false);
+  const [selectedFunctions, setSelectedFunctions] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const [output, setOutput] = useState();
 
-  
+  const handleSubmit = () =>{
+    console.log(userInput);
+    hash.compute(userInput, 'SHA-256').then((digest)=> setOutput(digest) );
+    console.log(output);
+  }
+
+  const handleChange = (e, value) =>{
+    console.log(e, value);
+    setSelectedFunctions(selectedFunctions === value ? null : value)
+  }
+
   return (
       <div>
         <style jsx global>{`
@@ -18,11 +30,12 @@ function App() {
         `}</style>
         <TopBar />
         <div style={styles.main}>
-          <FunctionSelect {...{ selectedFunctions, setSelectedFunctions }} />
-          <Recipe  {...{ setSelectedFunctions, selectedFunctions }}/>
+          <FunctionSelect {...{ selectedFunctions, setSelectedFunctions, handleChange }} />
+          <Recipe  {...{ setSelectedFunctions, selectedFunctions, handleSubmit, userInput }}/>
+
           <div style={styles.input}>
-            <Input />
-            <Output />
+            <Input {...{ userInput, setUserInput}}/>
+            <Output {...{ userInput, output }} />
           </div>
         </div>
       </div>
@@ -47,54 +60,73 @@ const TopBar = () => {
 
 }
 
-const FunctionSelect = ({ setSelectedFunctions, selectedFunctions }) =>{
+const FunctionSelect = ({ setSelectedFunctions, selectedFunctions, handleChange }) =>{
 
   return (
     <div style={styles.functions}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px'}}>Operations</Typography>
       <List>
-          <ListItemButton onClick={() => setSelectedFunctions(!selectedFunctions)}>
+          <ListItemButton onClick={(e, value) => handleChange(e, "MD2 Hashing")}>
             <Typography color='blue'>MD2 Hashing</Typography>
+          </ListItemButton>
+          <ListItemButton  onClick={(e) =>  handleChange(e,"Translations")}>
+            <Typography color='blue'>Translations +</Typography>
+          </ListItemButton>
+          <ListItemButton  onClick={(e) =>  handleChange(e,"Image Conversion")}>
+            <Typography color='blue'>Image Conversion</Typography>
+          </ListItemButton>
+          <ListItemButton onClick={(e) =>  handleChange(e,"Encryption")}>
+            <Typography color='blue'>Encryption +</Typography>
           </ListItemButton>
       </List>
     </div>
   );
 }
 
-const Recipe = ({ setSelectedFunctions, selectedFunctions }) =>{
+const Recipe = ({ setSelectedFunctions, selectedFunctions, handleSubmit,userInput }) =>{
   return(
     <div style={styles.recipe}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px', backgroundColor: '#f5f5f5'}}>Recipe</Typography>
       <div style={{ height: '85%'}}>
-        {selectedFunctions && <Typography>MD2 Hash</Typography>}
+        {selectedFunctions && <Typography>{selectedFunctions}</Typography>}
       </div>
       <div style={styles.btnContainer}>
         <Typography>Step</Typography>
-        <Button sx={{color: 'white', backgroundColor:'#47bf5b', height: '80%', width: '50%', fontSize: '2rem' }}>Bake!</Button>
+
+        <Button sx=
+        {{color: 'white',
+          backgroundColor:'#47bf5b',
+          height: '80%',
+          width: '50%',
+          fontSize: '2rem' }}
+          onClick={handleSubmit}
+          disabled={!selectedFunctions || !userInput }>Bake!</Button>
+
         <Typography>AutoBake</Typography>
-
       </div>
-
     </div>
-    
   );
 }
 
-const Input = () => {
+const Input = ({userInput, setUserInput}) => {
   return(
     <div style={styles.inputSection}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px', backgroundColor: '#f5f5f5'}}>Input</Typography>
-
+      <TextField sx={{ height: '100%', width: '100%'}} multiline rows={12}
+        onChange={(e,v) => setUserInput(e.target.value)}
+        value={userInput}></TextField>
     </div>
   );
 
 }
 
-const Output = () => {
+const Output = ({output}) => {
   return(
     <div style={styles.inputSection}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px', backgroundColor: '#f5f5f5'}}>Output</Typography>
-
+      <TextField disabled sx={{ height: '100%', width: '100%'}}
+        multiline rows={12}
+        value={output}></TextField>
     </div>
   );
 
