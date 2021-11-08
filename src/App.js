@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Container, Grid, Typography, TextField, Button, Link, List, ListItemButton} from '@mui/material';
-
+import hash from 'js-crypto-hash';
 function App() {
 
   const [selectedFunctions, setSelectedFunctions] = useState(false);
   const [userInput, setUserInput] = useState("");
-  const [output, setOutput] = useState("");
+  const [output, setOutput] = useState();
 
   const handleSubmit = () =>{
     console.log(userInput);
-    setOutput(userInput);
+    hash.compute(userInput, 'SHA-256').then((digest)=> setOutput(digest) );
     console.log(output);
   }
 
@@ -27,7 +27,7 @@ function App() {
         <TopBar />
         <div style={styles.main}>
           <FunctionSelect {...{ selectedFunctions, setSelectedFunctions }} />
-          <Recipe  {...{ setSelectedFunctions, selectedFunctions, handleSubmit }}/>
+          <Recipe  {...{ setSelectedFunctions, selectedFunctions, handleSubmit, userInput }}/>
 
           <div style={styles.input}>
             <Input {...{ userInput, setUserInput}}/>
@@ -70,7 +70,7 @@ const FunctionSelect = ({ setSelectedFunctions, selectedFunctions }) =>{
   );
 }
 
-const Recipe = ({ setSelectedFunctions, selectedFunctions, handleSubmit }) =>{
+const Recipe = ({ setSelectedFunctions, selectedFunctions, handleSubmit,userInput }) =>{
   return(
     <div style={styles.recipe}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px', backgroundColor: '#f5f5f5'}}>Recipe</Typography>
@@ -87,7 +87,7 @@ const Recipe = ({ setSelectedFunctions, selectedFunctions, handleSubmit }) =>{
           width: '50%',
           fontSize: '2rem' }}
           onClick={handleSubmit}
-          >Bake!</Button>
+          disabled={!selectedFunctions || !userInput }>Bake!</Button>
 
         <Typography>AutoBake</Typography>
       </div>
