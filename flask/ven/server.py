@@ -1,4 +1,4 @@
-from flask import Flask, request, abort
+from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from Crypto.Hash import MD2
 
@@ -20,7 +20,8 @@ def md2():
     val = request.args.get('input')
     h.update(val.encode('ascii'))
     result = h.hexdigest()
-    return result
+
+    return jsonify(result)
 
 
 if __name__ == "__main__":

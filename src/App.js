@@ -31,7 +31,7 @@ function App() {
    .then(
      data => {
        console.log(data)
-       setOutput(data.result)
+       setOutput(data)
      }
    )
   }
