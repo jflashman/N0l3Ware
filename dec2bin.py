@@ -1,63 +1,88 @@
+# binary to decimal and vice versa 
 #Global Variables
 user_input = ""
+error_msg = ""
 
-#Functions
+################### MAIN FUNCTION ###########################
 def main():
-    global user_input
+    global user_input, error_msg
 
-#test for if dec2bin or bni2dec
-	user_input = input("Enter 0 for Binary to Decimal Converter, 1 for Decimal to Binary Converter or X to exit: ").strip().lower()
-    if user_input == "0":
+    error_msg = "Error in Input!\n"
+
+    # 0 = bin->dec, 1=dec->bin
+    choice=input("Enter 0 for Binary to Decimal Converter, 1 for Decimal to Binary Converter:") # or X to exit: ").strip().lower()
+    if choice == "0":
         bin2dec()
-    elif user_input == "1":
+    elif choice== "1":
         dec2bin()
-    elif user_input == "x":
-        exit(0)
     else:
-        print("Invalid Input.\n")
-        exit(0)
+        return(error_msg) #print("Invalid Input.\n")
+     #   exit(0)
+#end of main()
 
+################ BINARY TO DECIMAL ################
 def bin2dec():
     global user_input
-    contFlag = False
-    	user_input = input("Enter binary: ")
-        Data = list(user_input)
-        sum = 0
-        i = 1
-	#if ()
-        for bin in Data:
-            if bin == "0" or bin == "1":
-                sum += int(bin) * pow(2, len(binData) - i)
-                i += 1
-            else:
-                print("Error in Input!")
-                contFlag = True
-                break
+    result = 0  #placeholder for final conversion
+    user_input = input("Enter binary: ")
 
-        if contFlag == True:
-            contFlag = False
-            continue
+    orig_binary = str(user_input)   #convert to string to access each int
 
-        print("Binary Value: " + user_input + "\nDecimal Value: " + str(sum))
-
-    #else:
-     exit(0)
-
-
-def dec2bin():
-    global user_input
-    	user_input = input("Enter decimal: ").strip()
-        if user_input == "x":
+    for bin in orig_binary:         #checks if binary is valid
+        if bin == "0" or bin == "1":
+            pass
+            #continue
+        else:
+            error_msg= "Error in Input!\n"
+            return(error_msg)
             exit(0)
-        num = int(user_input)
-        binary = ""
-        while (num > 0):
-            temp = int(float(num % 2))
-            binary = str(temp) + binary
-            num = (num - temp) / 2
-        print("Decimal Value: " + user_input + "\nBinary Value: " + binary)
-    #else:
-     #   exit(0)
+
+
+    rev_binary = reversed(str(user_input))  #reverse binary to start converting
+
+
+    for i, num in enumerate(rev_binary):    #conversion for each binary
+        power = 2**i
+        if int(num) == 1:
+            result += power
+        else:
+            result += 0
+
+    print(result)
+
+    return(result)
+#end of bin2dec
+
+
+################## DECIMAL TO BINARY ######################
+def dec2bin():
+    global user_input, error_msg
+    user_input = input("Enter decimal: ")
+
+    orig_decimal = str(user_input)  #temp to check if decimal is valid
+
+    if orig_decimal.isdigit():      #checks if devimal is valid
+        pass
+    else:
+        return(error_msg)
+      #  print("Error in Input!\n")
+        exit(0)#break
+
+    # conversion from decimal to binary
+    num = int(user_input)
+    final_binary = ""
+    while (num > 0):
+        temp = int(float(num % 2))
+        final_binary = str(temp) + final_binary
+        num = (num - temp) / 2
+
+    #end of conversion
+
+    print(final_binary)
+
+    return(final_binary)
+#end of dec2bin function
+
 
 #Fxnn Calls
 main()
