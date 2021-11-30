@@ -12,16 +12,16 @@ def main():
     # 0 = bin->dec, 1=dec->bin
     choice=input("Enter 0 for Binary to Decimal Converter, 1 for Decimal to Binary Converter:") # or X to exit: ").strip().lower()
     if choice == "0":
-        bin2dec()
+        bin_to_dec()
     elif choice== "1":
-        dec2bin()
+        dec_to_bin()
     else:
         return(error_msg) #print("Invalid Input.\n")
      #   exit(0)
 #end of main()
 
 ################ BINARY TO DECIMAL ################
-def bin2dec():
+def bin_to_dec():
     global user_input
     result = 0  #placeholder for final conversion
     user_input = input("Enter binary: ")
@@ -55,7 +55,7 @@ def bin2dec():
 
 
 ################## DECIMAL TO BINARY ######################
-def dec2bin():
+def dec_to_bin():
     global user_input, error_msg
     user_input = input("Enter decimal: ")
 
