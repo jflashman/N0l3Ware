@@ -164,5 +164,35 @@ def dec2bin():
       # print("Error in Input!\n")
 
 
+@app.route("/bin2dec", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def bin2dec():
+    val = request.args.get('input')
+    error_msg = "Error -- invalid input. Input a binary number"
+    orig_binary = str(val)
+    result = 0
+
+    for bin in orig_binary:  # checks if binary is valid
+        if bin == "0" or bin == "1":
+            pass
+            # continue
+        else:
+
+            return jsonify(error_msg)
+            exit(0)
+
+    # reverse binary to start converting
+    rev_binary = reversed(str(val))
+
+    for i, num in enumerate(rev_binary):  # conversion for each binary
+        power = 2**i
+        if int(num) == 1:
+            result += power
+        else:
+            result += 0
+
+    return jsonify(result)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
