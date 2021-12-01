@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Container, Grid, Typography, TextField, Button, Link, List, ListItemButton} from '@mui/material';
 import hash from 'js-crypto-hash';
 function App() {
@@ -6,43 +6,16 @@ function App() {
   const [selectedFunctions, setSelectedFunctions] = useState("");
   const [userInput, setUserInput] = useState("");
   const [output, setOutput] = useState();
-  const [apiData, setApiData] = useState({});
-  const [url, setUrl] = useState("http://localhost:5000/");
-
-
-  useEffect(() => {
-    fetch('http://localhost:5000/members').then(
-      res => res.json()
-    )
-    .then(
-      data => {
-        setApiData(data)
-        console.log(data)
-      }
-    )
-    .catch(err => console.log(err))
-  }, [])
-
 
   const handleSubmit = () =>{
-    fetch(url+ 'md2?input=' + userInput).then(
-     response => response.json()
-   )
-   .then(
-     data => {
-       console.log(data)
-       setOutput(data)
-     }
-   )
+    console.log(userInput);
+    hash.compute(userInput, 'SHA-256').then((digest)=> setOutput(digest) );
+    console.log(output);
   }
 
   const handleChange = (e, value) =>{
     console.log(e, value);
     setSelectedFunctions(selectedFunctions === value ? null : value)
-  }
-
-  const handleChange2 = (e, value) =>{
-    setUserInput(e.target.value);
   }
 
   return (
@@ -61,7 +34,7 @@ function App() {
           <Recipe  {...{ setSelectedFunctions, selectedFunctions, handleSubmit, userInput }}/>
 
           <div style={styles.input}>
-            <Input {...{ userInput, setUserInput, handleChange2}}/>
+            <Input {...{ userInput, setUserInput}}/>
             <Output {...{ userInput, output }} />
           </div>
         </div>
@@ -127,7 +100,7 @@ const Recipe = ({ setSelectedFunctions, selectedFunctions, handleSubmit,userInpu
           width: '50%',
           fontSize: '2rem' }}
           onClick={handleSubmit}
-          >Bake!</Button>
+          disabled={!selectedFunctions || !userInput }>Bake!</Button>
 
         <Typography>AutoBake</Typography>
       </div>
@@ -135,12 +108,12 @@ const Recipe = ({ setSelectedFunctions, selectedFunctions, handleSubmit,userInpu
   );
 }
 
-const Input = ({userInput, setUserInput, handleChange2}) => {
+const Input = ({userInput, setUserInput}) => {
   return(
     <div style={styles.inputSection}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px', backgroundColor: '#f5f5f5'}}>Input</Typography>
       <TextField sx={{ height: '100%', width: '100%'}} multiline rows={12}
-        onChange={(e,v) => handleChange2(e,v)}
+        onChange={(e,v) => setUserInput(e.target.value)}
         value={userInput}></TextField>
     </div>
   );
