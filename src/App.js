@@ -1,13 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Container, Grid, Typography, TextField, Button, Link, List, ListItemButton} from '@mui/material';
-import hash from 'js-crypto-hash';
+import { Container, Grid, Typography, TextField, Button, Link, List, ListItemButton,ListItem, Dialog, DialogTitle, DialogContent} from '@mui/material';
+import functions from './functions.js';
 function App() {
 
-  const [selectedFunctions, setSelectedFunctions] = useState("");
+  const [selectedFunctions, setSelectedFunctions] = useState({});
+  const [parentFunction, setParentFunction] = useState({});
   const [userInput, setUserInput] = useState("");
   const [output, setOutput] = useState();
   const [apiData, setApiData] = useState({});
   const [url, setUrl] = useState("http://localhost:5000/");
+  const [funcUrl, setFuncUrl] = useState("");
+  const [showChildren, setShowChildren] = useState(false);
+
+
+  
 
 
   useEffect(() => {
@@ -25,7 +31,7 @@ function App() {
 
 
   const handleSubmit = () =>{
-    fetch(url+ 'md2?input=' + userInput).then(
+    fetch(url+ selectedFunctions.url + '?input=' + userInput).then(
      response => response.json()
    )
    .then(
@@ -36,9 +42,16 @@ function App() {
    )
   }
 
-  const handleChange = (e, value) =>{
-    console.log(e, value);
-    setSelectedFunctions(selectedFunctions === value ? null : value)
+  const handleChange = (e, funcName, urlVal, func) =>{
+
+    if (func.hasChildren === false )
+    {
+      setSelectedFunctions(func);
+      setFuncUrl(urlVal);
+    }
+    if(parentFunction === func) setParentFunction(null);
+    else setParentFunction(func);
+
   }
 
   const handleChange2 = (e, value) =>{
@@ -53,11 +66,12 @@ function App() {
         padding: 0px;
         box-sizing: border-box;
         height: 100vh;
+        overflow: hidden;
       }
         `}</style>
         <TopBar />
         <div style={styles.main}>
-          <FunctionSelect {...{ selectedFunctions, setSelectedFunctions, handleChange }} />
+          <FunctionSelect {...{ selectedFunctions, setSelectedFunctions, handleChange, showChildren, parentFunction}} />
           <Recipe  {...{ setSelectedFunctions, selectedFunctions, handleSubmit, userInput }}/>
 
           <div style={styles.input}>
@@ -87,25 +101,47 @@ const TopBar = () => {
 
 }
 
-const FunctionSelect = ({ setSelectedFunctions, selectedFunctions, handleChange }) =>{
+const FunctionSelect = ({ handleChange,showChildren, selectedFunctions,parentFunction, setSelectedFunctions}) =>{
 
   return (
     <div style={styles.functions}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px'}}>Operations</Typography>
-      <List>
-          <ListItemButton onClick={(e, value) => handleChange(e, "MD2 Hashing")}>
-            <Typography color='blue'>MD2 Hashing</Typography>
-          </ListItemButton>
-          <ListItemButton  onClick={(e) =>  handleChange(e,"Translations")}>
-            <Typography color='blue'>Translations +</Typography>
-          </ListItemButton>
-          <ListItemButton  onClick={(e) =>  handleChange(e,"Image Conversion")}>
-            <Typography color='blue'>Image Conversion</Typography>
-          </ListItemButton>
-          <ListItemButton onClick={(e) =>  handleChange(e,"Encryption")}>
-            <Typography color='blue'>Encryption +</Typography>
-          </ListItemButton>
+      <List sx={{overflowY: 'scroll', maxHeight: '100%'}}>
+        
+        {functions.map(func => 
+        <>
+
+            <ListItemButton onClick={(e) => handleChange(e, func.name, func.url,func)}>
+              <Typography color='blue'>{func.name}</Typography>
+            </ListItemButton>
+            {func.hasChildren && parentFunction === func &&   func.children.map(child => 
+              <List>
+                <ListItemButton onClick={(e) => {setSelectedFunctions(child !== selectedFunctions ? child : null)}}>
+                  <Typography color='blue'>{child.name}</Typography>
+                </ListItemButton>
+              </List>
+            
+            )}
+
+        </>
+        )}
+        
+        
       </List>
+
+      {/*<Dialog open={showChildren === true} onClose={() => setShowChildren(false)}>
+        <DialogTitle>Select the function you'd like to perform:</DialogTitle>
+        <DialogContent>
+          <List>
+            {functions.filter(func => func.name === selectedFunctions).then(children.map(child =>
+              <ListItemButton onClick={(e) => handleChange(e, child.name, child.url,child)}>
+                <Typography color='blue'>{child.name}</Typography>
+              </ListItemButton>
+            ))}
+          </List>
+        </DialogContent>
+      </Dialog>*/}
+      
     </div>
   );
 }
@@ -115,7 +151,7 @@ const Recipe = ({ setSelectedFunctions, selectedFunctions, handleSubmit,userInpu
     <div style={styles.recipe}>
       <Typography variant='h6' sx={{border: '1px solid black', padding: '8px', backgroundColor: '#f5f5f5'}}>Recipe</Typography>
       <div style={{ height: '85%'}}>
-        {selectedFunctions && <Typography>{selectedFunctions}</Typography>}
+        {selectedFunctions && <Typography>{selectedFunctions.name}</Typography>}
       </div>
       <div style={styles.btnContainer}>
         <Typography>Step</Typography>

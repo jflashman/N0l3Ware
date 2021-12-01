@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from Crypto.Hash import MD2
+import hashlib
 
 app = Flask(__name__)
 
@@ -20,8 +21,124 @@ def md2():
     val = request.args.get('input')
     h.update(val.encode('ascii'))
     result = h.hexdigest()
-
     return jsonify(result)
+
+
+@app.route("/md4", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def md4():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.new('md4', encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/md5", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def md5():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.new('md5', encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/sha1", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def sha1():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.sha1(encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/sha224", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def sha224():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.sha224(encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/sha256", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def sha256():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.sha256(encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/sha384", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def sha384():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.sha384(encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/sha512", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def sha512():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.sha512(encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/sha3224", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def sha3224():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.sha3_224(encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/sha3256", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def sha3256():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.sha3_256(encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/sha3384", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def sha3384():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.sha3_384(encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/sha3512", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def sha3512():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.sha3_512(encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/blake2s", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def blake2s():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.blake2s(encoded_input).hexdigest()
+    return jsonify(hashed_input)
+
+
+@app.route("/blake2b", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def blake2b():
+    val = request.args.get('input')
+    encoded_input = val.encode('utf-8')
+    hashed_input = hashlib.blake2b(encoded_input).hexdigest()
+    return jsonify(hashed_input)
 
 
 if __name__ == "__main__":
