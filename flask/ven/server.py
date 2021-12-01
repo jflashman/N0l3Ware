@@ -141,5 +141,28 @@ def blake2b():
     return jsonify(hashed_input)
 
 
+@app.route("/dec2bin", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def dec2bin():
+    val = request.args.get('input')
+    error_msg = "Error -- invalid input. Input decimal number"
+
+    if str(val).isdigit():  # checks if devimal is valid
+        # conversion from decimal to binary
+        num = int(val)
+        final_binary = ""
+        while (num > 0):
+            temp = int(float(num % 2))
+            final_binary = str(temp) + final_binary
+            num = (num - temp) / 2
+
+        # end of conversion
+        return jsonify(final_binary)
+
+    else:
+        return jsonify(error_msg)
+      # print("Error in Input!\n")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
