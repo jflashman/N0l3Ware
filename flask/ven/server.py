@@ -164,5 +164,6 @@ def dec2bin():
       # print("Error in Input!\n")
 
 
+@app.route("/xor", methods=["GET"])
 if __name__ == "__main__":
     app.run(debug=True)
