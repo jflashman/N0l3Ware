@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from Crypto.Hash import MD2
+from Cryptodome import Random
+from Cryptodome.Cipher import AES
+from secrets import token_bytes
 import hashlib
 
 app = Flask(__name__)
@@ -213,6 +216,34 @@ def nott():
     val2 = int(text.partition("not")[2])
         
     return jsonify(~val1)
+
+@app.route("/encrypt", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def encrypt():
+    key = token_bytes(16)
+    text = str(request.args.get('input'))
+    iv = Random.new().read(AES.block_size)
+    cipher = AES.new(key, AES.MODE_EAX, iv)
+    nonce = cipher.nonce
+    ciphertext , tag = cipher.encrypt_and_digest(text.encode('ascii'))
+
+    return jsonify(str(ciphertext))
+
+
+
+# @app.route("/decrypt", methods=["GET"])
+# @cross_origin(supports_credentials=True)
+# def decrypt():
+#    cipher = AES.new(key, AES.MODE_EAX, nonce=nonce)
+#    plaintext = cipher.decrypt(ciphertext)
+#    try:
+#        cipher.verify(tag)
+#        return plaintext.decode('ascii')
+#    except:
+#        return False
+
+
+
 
 
 if __name__ == "__main__":

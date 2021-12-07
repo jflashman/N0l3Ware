@@ -116,10 +116,19 @@ const functions = [
         
     },
     {
-        name: 'Encryption',
-        url: 'encrypt',
-        hasChildren: false,
-        children: [],
+        name: 'Encryption +',
+        url: 'none',
+        hasChildren: true,
+        children: [
+            {
+                name: "AES Encryption",
+                url: "encrypt"
+            },
+            {
+                name: "AES Decryption",
+                url: "decrypt"
+            }
+        ],
         showChildren: false
 
     }
