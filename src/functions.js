@@ -84,6 +84,30 @@ const functions = [
         ]
     },
     {
+        name: "Operators +",
+        url: "none",
+        hasChildren: true,
+        showChildren: true,
+        children: [
+            {
+                name: "Xor",
+                url: 'xor'
+            },
+            {
+                name: "Or",
+                url: "or"
+            },
+            {
+                name: "And",
+                url: "and"
+            },
+            {
+                name: "Not",
+                url: "not"
+            }
+        ]
+    },
+    {
         name: 'Translations',
         url: 'translate',
         hasChildren: false,

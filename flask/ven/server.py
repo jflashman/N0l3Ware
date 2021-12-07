@@ -163,7 +163,57 @@ def dec2bin():
         return jsonify(error_msg)
       # print("Error in Input!\n")
 
-
 @app.route("/xor", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def xor():
+    text = str(request.args.get('input'))
+    if (len(text.partition("xor")) > 3):
+        return jsonify("Too many operators!")
+
+    val1 = int(text.partition("xor")[0])
+    val2 = int(text.partition("xor")[2])
+        
+    return jsonify(val1 ^ val2)
+
+
+@app.route("/or", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def orr():
+    text = str(request.args.get('input'))
+    if (len(text.partition("or")) > 3):
+        return jsonify("Too many operators!")
+
+    val1 = int(text.partition("or")[0])
+    val2 = int(text.partition("or")[2])
+
+    print(val1 | val2)
+        
+    return jsonify(val1 | val2)
+
+@app.route("/and", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def andd():
+    text = str(request.args.get('input'))
+    if (len(text.partition("and")) > 3):
+        return jsonify("Too many operators!")
+
+    val1 = int(text.partition("and")[0])
+    val2 = int(text.partition("and")[2])
+        
+    return jsonify(val1 & val2)
+
+@app.route("/not", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def nott():
+    text = str(request.args.get('input'))
+    if (len(text.partition("not")) > 3):
+        return jsonify("Too many operators!")
+
+    val1 = int(text.partition("not")[0])
+    val2 = int(text.partition("not")[2])
+        
+    return jsonify(~val1)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
