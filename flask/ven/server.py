@@ -144,6 +144,42 @@ def blake2b():
     return jsonify(hashed_input)
 
 
+@app.route("/bin2dec", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def bin2dec():
+    error_msg = "Error in Input!\n"
+    result = 0 # placeholder for final conversion
+    val = request.args.get('input')
+
+    orig_binary = str(val) # convert to string to access each int
+
+    for bin in orig_binary:     # checks if binary is valid
+        if bin == "0" or bin == "1":
+            pass
+            # continue
+        else:
+            return(error_msg)
+            exit(0)
+
+    rev_binary = reversed(str(val))     # reverse binary to start converting
+
+    for i, num in enumerate(rev_binary):    # converts for each binary
+        power = 2**i
+        if int(num) == 1:
+            result += power
+        else:
+            result += 0
+
+    return jsonify(result)
+
+
+    
+
+
+
+
+
+
 @app.route("/dec2bin", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def dec2bin():
