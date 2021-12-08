@@ -3,15 +3,134 @@ from flask_cors import CORS, cross_origin
 from Crypto.Hash import MD2
 from Cryptodome import Random
 from Cryptodome.Cipher import AES
+from Cryptodome.Protocol.KDF import scrypt
+from base64 import b64encode, b64decode
 from secrets import token_bytes
+import
 import hashlib
 
-iv = Random.new().read(AES.block_size)
-key = token_bytes(16)
-nonce = cipher.nonce
-app = Flask(__name__)
 
+
+key = token_bytes(16)
+
+app = Flask(__name__)
 CORS(app, support_credentials=True)
+
+def eEAX(msg):
+    iv = Random.new().read(AES.block_size)
+    cipher = AES.new(key, AES.MODE_EAX, iv)
+    nonce = cipher.nonce
+    ciphertext , tag = cipher.encrypt_and_digest(msg.encode('ascii'))
+
+    return nonce, ciphertext, tag
+
+def dEAX(nonce, ciphertext):
+
+    cipher = AES.new(key, AES.MODE_EAX, nonce=nonce)
+    plaintext = cipher.decrypt(ciphertext)
+    return plaintext.decode('ascii')
+    
+    
+class AESCipher(object):
+    def __init__(self, key):
+        self.block_size = AES.block_size
+        self.key = hashlib.sha256(key.encode()).digest()
+
+    def eCBC(self, plain_text):
+        plain_text = self.__pad(plain_text)
+        iv = Random.new().read(self.block_size)
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        encrypted_text = cipher.encrypt(plain_text.encode())
+        return b64encode(iv + encrypted_text).decode("utf-8")
+
+    def eCFB(self, plain_text):
+        plain_text = self.__pad(plain_text)
+        iv = Random.new().read(self.block_size)
+        cipher = AES.new(self.key, AES.MODE_CFB, iv)
+        encrypted_text = cipher.encrypt(plain_text.encode())
+        return b64encode(iv + encrypted_text).decode("utf-8")
+
+    def eOFB(self, plain_text):
+        plain_text = self.__pad(plain_text)
+        iv = Random.new().read(self.block_size)
+        cipher = AES.new(self.key, AES.MODE_OFB, iv)
+        encrypted_text = cipher.encrypt(plain_text.encode())
+        return b64encode(iv + encrypted_text).decode("utf-8")
+
+    def eCTR(self, plain_text):
+        plain_text = self.__pad(plain_text)
+        cipher = AES.new(self.key, AES.MODE_CTR)
+        encrypted_text = cipher.encrypt(plain_text.encode())
+        return b64encode(encrypted_text).decode("utf-8")
+
+    def eGCM(self, plain_text):
+        plain_text = self.__pad(plain_text)
+        cipher = AES.new(self.key, AES.MODE_GCM)
+        encrypted_text = cipher.encrypt(plain_text.encode())
+        return b64encode(encrypted_text).decode("utf-8")
+
+    def eECB(self, plain_text):
+        plain_text = self.__pad(plain_text)
+        cipher = AES.new(self.key, AES.MODE_ECB)
+        encrypted_text = cipher.encrypt(plain_text.encode())
+        return b64encode(encrypted_text).decode("utf-8")
+
+
+
+    def dCBC(self, encrypted_text):
+        encrypted_text = b64decode(encrypted_text)
+        iv = encrypted_text[:self.block_size]
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        plain_text = cipher.decrypt(encrypted_text[self.block_size:]).decode("utf-8")
+        return self.__unpad(plain_text)
+
+    def dCFB(self, encrypted_text):
+        encrypted_text = b64decode(encrypted_text)
+        iv = encrypted_text[:self.block_size]
+        cipher = AES.new(self.key, AES.MODE_CFB, iv)
+        plain_text = cipher.decrypt(encrypted_text[self.block_size:]).decode("utf-8")
+        return self.__unpad(plain_text)
+
+    def dOFB(self, encrypted_text):
+        encrypted_text = b64decode(encrypted_text)
+        iv = encrypted_text[:self.block_size]
+        cipher = AES.new(self.key, AES.MODE_OFB, iv)
+        plain_text = cipher.decrypt(encrypted_text[self.block_size:])
+        return self.__unpad(plain_text)
+
+    def dCTR(self, encrypted_text):
+        encrypted_text = b64decode(encrypted_text)
+        cipher = AES.new(self.key, AES.MODE_CTR)
+        plain_text = cipher.decrypt(encrypted_text[self.block_size:])
+        return self.__unpad(plain_text)
+
+    def dGCM(self, encrypted_text):
+        encrypted_text = b64decode(encrypted_text)
+        iv = encrypted_text[:self.block_size]
+        cipher = AES.new(self.key, AES.MODE_GCM, iv)
+        plain_text = cipher.decrypt(encrypted_text[self.block_size:])
+        return self.__unpad(plain_text)
+
+    def gECB(self, encrypted_text):
+        encrypted_text = b64decode(encrypted_text)
+        cipher = AES.new(self.key, AES.MODE_ECB)
+        plain_text = cipher.decrypt(encrypted_text[self.block_size:])
+        return self.__unpad(plain_text)
+
+    def __pad(self, plain_text):
+        number_of_bytes_to_pad = self.block_size - len(plain_text) % self.block_size
+        ascii_string = chr(number_of_bytes_to_pad)
+        padding_str = number_of_bytes_to_pad * ascii_string
+        padded_plain_text = plain_text + padding_str
+        return padded_plain_text
+
+    @staticmethod
+    def __unpad(plain_text):
+        last_character = plain_text[len(plain_text) - 1:]
+        bytes_to_remove = ord(last_character)
+        return plain_text[:-bytes_to_remove]
+
+    
 
 
 @app.route("/members", methods=["GET"])
@@ -201,12 +320,12 @@ def dec2bin():
 @app.route("/xor", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def xor():
-    text = str(request.args.get('input'))
-    if (len(text.partition("xor")) > 3):
+    val = str(request.args.get('input'))
+    if (len(val.partition("xor")) > 3):
         return jsonify("Too many operators!")
 
-    val1 = int(text.partition("xor")[0])
-    val2 = int(text.partition("xor")[2])
+    val1 = int(val.partition("xor")[0])
+    val2 = int(val.partition("xor")[2])
         
     return jsonify(val1 ^ val2)
 
@@ -215,12 +334,12 @@ def xor():
 @app.route("/or", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def orr():
-    text = str(request.args.get('input'))
-    if (len(text.partition("or")) > 3):
+    val = str(request.args.get('input'))
+    if (len(val.partition("or")) > 3):
         return jsonify("Too many operators!")
 
-    val1 = int(text.partition("or")[0])
-    val2 = int(text.partition("or")[2])
+    val1 = int(val.partition("or")[0])
+    val2 = int(val.partition("or")[2])
 
     print(val1 | val2)
         
@@ -229,55 +348,185 @@ def orr():
 @app.route("/and", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def andd():
-    text = str(request.args.get('input'))
-    if (len(text.partition("and")) > 3):
+    val = str(request.args.get('input'))
+    if (len(val.partition("and")) > 3):
         return jsonify("Too many operators!")
 
-    val1 = int(text.partition("and")[0])
-    val2 = int(text.partition("and")[2])
+    val1 = int(val.partition("and")[0])
+    val2 = int(val.partition("and")[2])
         
     return jsonify(val1 & val2)
 
 @app.route("/not", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def nott():
-    text = str(request.args.get('input'))
-    if (len(text.partition("not")) > 3):
+    
+    val = str(request.args.get('input'))
+    if (len(val.partition("not")) > 3):
         return jsonify("Too many operators!")
 
-    val1 = int(text.partition("not")[0])
-    val2 = int(text.partition("not")[2])
+    val1 = int(val.partition("not")[0])
+    val2 = int(val.partition("not")[2])
         
     return jsonify(~val1)
 
-@app.route("/encrypt", methods=["GET"])
+@app.route("/encryptEAX", methods=["GET"])
 @cross_origin(supports_credentials=True)
-def encrypt():
-    text = str(request.args.get('input'))
-    # iv = Random.new().read(AES.block_size) now defined globally
-    cipher = AES.new(key, AES.MODE_EAX, iv)
+def encryptEAX():
     
-    ciphertext , tag = cipher.encrypt_and_digest(text.encode('ascii'))
+    val = str(request.args.get('input'))
 
-    return jsonify(str(ciphertext) + "\n\nIV: " + str(iv))
+    nonce, ciphertext, tag = eEAX(val)
+
+    return jsonify("Ciphertext: " + str(ciphertext) + "\nNonce: " + str(nonce))
 
 
-
-
-@app.route("/decrypt", methods=["GET"])
+@app.route("/decryptEAX", methods=["GET"])
 @cross_origin(supports_credentials=True)
-def decrypt():
-    cipher = AES.new(key, AES.MODE_EAX, nonce=nonce)
-    plaintext = cipher.decrypt(ciphertext)
-    try:
-        cipher.verify(tag)
-        return plaintext.decode('ascii')
-    except:
-        return False
+def decryptEAX():
+    val = str(request.args.get('input'))
+    
+    val1 = val.partition(".")[0]
+    val2 = val.partition(".")[2]
+
+    nonce = bytes(create_jsonlines(val1), encoding='utf8')
 
 
+    plaintext = dEAX(nonce, val2)
 
+    return jsonify(plaintext)
 
+@app.route("/encryptCBC", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def encryptCBC():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+
+    return(jsonify(AESCipher(key).eCBC(msg)))
+
+@app.route("/encryptCFB", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def encryptCFB():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+
+    return(jsonify(AESCipher(key).eCFB(msg)))
+
+@app.route("/encryptOFB", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def encryptOFB():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+
+    return(jsonify(AESCipher(key).eOFB(msg)))
+
+@app.route("/encryptCTR", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def encryptCTR():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+
+    return(jsonify(AESCipher(key).eCTR(msg)))
+
+@app.route("/encryptGCM", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def encryptGCM():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+
+    return(jsonify(AESCipher(key).eGCM(msg)))
+
+@app.route("/encryptECB", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def encryptECB():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+
+    return(jsonify(AESCipher(key).eECB(msg)))
+
+@app.route("/decryptCBC", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def decryptCBC():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+
+    p = AESCipher(key).eCBC(msg)
+
+    return(jsonify(AESCipher(key).dCBC(p)))
+
+@app.route("/decryptCFB", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def decryptCFB():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+
+    p = AESCipher(key).eCBC(msg)
+
+    return(jsonify(AESCipher(key).dCFB(p)))
+
+@app.route("/decryptOFB", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def decryptOFB():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+
+    p = AESCipher(key).eCBC(msg)
+
+    return(jsonify(AESCipher(key).dOFB(p)))
+
+@app.route("/decryptCTR", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def decryptCTR():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+
+    p = AESCipher(key).eCBC(msg)
+
+    return(jsonify(AESCipher(key).dCTR(p)))
+
+@app.route("/decryptGCM", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def decryptGCM():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+
+    p = AESCipher(key).eCBC(msg)
+
+    return(jsonify(AESCipher(key).dGCM(p)))
+
+@app.route("/decryptECB", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def decryptECB():
+    val = str(request.args.get('input'))
+
+    key = val.partition(".")[0]
+    msg= val.partition(".")[2]
+    
+    p = AESCipher(key).eCBC(msg)
+
+    return(jsonify(AESCipher(key).dECB(p)))
 
 if __name__ == "__main__":
     app.run(debug=True)

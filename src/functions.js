@@ -38,10 +38,6 @@ const functions = [
                 url: 'sha384'
             },
             {
-                name: 'Sha2-512',
-                url: 'sha512'
-            },
-            {
                 name: 'Sha3-224',
                 url: 'sha3224'
             },
@@ -56,6 +52,10 @@ const functions = [
             {
                 name: 'Sha3-512',
                 url: 'sha3512'
+            },
+            {
+                name: 'Sha-512',
+                url: 'sha512'
             },
             {
                 name: 'Blake2s',
@@ -115,19 +115,76 @@ const functions = [
         showChildren: false
         
     },
+    
     {
-        name: 'Encryption +',
+        name: "AES Encryption +",
         url: 'none',
         hasChildren: true,
         children: [
             {
-                name: "AES Encryption",
-                url: "encrypt"
+                name: "EAX",
+                url: "encryptEAX"
             },
             {
-                name: "AES Decryption",
-                url: "decrypt"
-            }
+                name: "CBC Format \'Key.Msg\'",
+                url: "encryptCBC"
+            },
+            {
+                name: "CFB \'Format Key.Msg\'",
+                url: "encryptCFB"
+            },
+            {
+                name: "OFB \'Format Key.Msg\'",
+                url: "encryptOFB"
+            },
+            {
+                name: "CTR \'Format Key.Msg\'",
+                url: "encryptCTR"
+            },
+            {
+                name: "GCM \'Format Key.Msg\'",
+                url: "encryptGCM"
+            },
+            {
+                name: "ECB \'Format Key.Msg\'",
+                url: "encryptECB"
+            },
+        ]
+    },
+    {
+        name: "AES Decryption +",
+        url: 'none',
+        hasChildren: true,
+        children: [
+            {
+                name: "EAX Format \'Nonce.Msg\'",
+                url: "decryptEAX"
+            },
+            {
+                name: "CBC \'Format Key.Msg\'",
+                url: "decryptCBC"
+            },
+            {
+                name: "CFB \'Format Key.Msg\'",
+                url: "decryptCFB"
+            },
+            {
+                name: "OFB \'Format Key.Msg\'",
+                url: "decryptOFB"
+            },
+            {
+                name: "CTR \'Format Key.Msg\'",
+                url: "decryptCTR"
+            },
+            {
+                name: "GCM \'Format Key.Msg\'",
+                url: "decryptGCM"
+            },
+            {
+                name: "ECB \'Format Key.Msg\'",
+                url: "decryptECB"
+            },
+            
         ],
         showChildren: false
 
