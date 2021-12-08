@@ -6,6 +6,9 @@ from Cryptodome.Cipher import AES
 from secrets import token_bytes
 import hashlib
 
+iv = Random.new().read(AES.block_size)
+key = token_bytes(16)
+nonce = cipher.nonce
 app = Flask(__name__)
 
 CORS(app, support_credentials=True)
@@ -173,13 +176,6 @@ def bin2dec():
     return jsonify(result)
 
 
-    
-
-
-
-
-
-
 @app.route("/dec2bin", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def dec2bin():
@@ -213,6 +209,7 @@ def xor():
     val2 = int(text.partition("xor")[2])
         
     return jsonify(val1 ^ val2)
+
 
 
 @app.route("/or", methods=["GET"])
@@ -256,27 +253,27 @@ def nott():
 @app.route("/encrypt", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def encrypt():
-    key = token_bytes(16)
     text = str(request.args.get('input'))
-    iv = Random.new().read(AES.block_size)
+    # iv = Random.new().read(AES.block_size) now defined globally
     cipher = AES.new(key, AES.MODE_EAX, iv)
-    nonce = cipher.nonce
+    
     ciphertext , tag = cipher.encrypt_and_digest(text.encode('ascii'))
 
-    return jsonify(str(ciphertext))
+    return jsonify(str(ciphertext) + "\n\nIV: " + str(iv))
 
 
 
-# @app.route("/decrypt", methods=["GET"])
-# @cross_origin(supports_credentials=True)
-# def decrypt():
-#    cipher = AES.new(key, AES.MODE_EAX, nonce=nonce)
-#    plaintext = cipher.decrypt(ciphertext)
-#    try:
-#        cipher.verify(tag)
-#        return plaintext.decode('ascii')
-#    except:
-#        return False
+
+@app.route("/decrypt", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def decrypt():
+    cipher = AES.new(key, AES.MODE_EAX, nonce=nonce)
+    plaintext = cipher.decrypt(ciphertext)
+    try:
+        cipher.verify(tag)
+        return plaintext.decode('ascii')
+    except:
+        return False
 
 
 
