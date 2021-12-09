@@ -9,5 +9,5 @@
 	
 	RD: https://docs.google.com/document/d/1sCs3lupQEdbpYbxqf8r3VgLk03YsY5yCuOeYZzgxiKU/edit
 	
-	Video: https://www.youtube.com/watch?v=OGtiQ-EYq0g
+	Video: https://youtu.be/OGtiQ-EYq0g
 	
