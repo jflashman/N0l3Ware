@@ -516,16 +516,16 @@ def freqanaly():
 
     plt.yticks(range(len(values)))
     plt.bar(keys, values, align='center')
-    plt.savefig('test.png') 
+    plt.savefig('plot.png') 
 
-    data = {}
-    with open('test.png', mode='rb') as fin:
+    plot = {}
+    with open('plot.png', mode='rb') as file:
         
-        read_in = fin.read()
-        data['img'] = base64.encodebytes(read_in).decode('utf-8')
+        read_in = file.read()
+        plot['img'] = base64.encodebytes(read_in).decode('utf-8')
 
-    remove('test.png')
-    return jsonify(json.dumps(data))
+    remove('plot.png')
+    return jsonify(json.dumps(plot))
 
 if __name__ == "__main__":
     app.run(debug=True)
