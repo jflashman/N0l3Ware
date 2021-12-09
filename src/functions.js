@@ -161,7 +161,7 @@ const functions = [
                 url: "decryptEAX"
             },
             {
-                name: "CBC \'Format Key.Msg\'",
+                name: "CBC Format \'Key.Msg\'",
                 url: "decryptCBC"
             },
             {

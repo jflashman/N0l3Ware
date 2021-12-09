@@ -6,7 +6,6 @@ from Cryptodome.Cipher import AES
 from Cryptodome.Protocol.KDF import scrypt
 from base64 import b64encode, b64decode
 from secrets import token_bytes
-import
 import hashlib
 
 
@@ -402,9 +401,10 @@ def encryptCBC():
     val = str(request.args.get('input'))
 
     key = val.partition(".")[0]
-    msg= val.partition(".")[2]
+    msg = val.partition(".")[2]
 
-    return(jsonify(AESCipher(key).eCBC(msg)))
+
+    return jsonify(AESCipher(key).eCBC(msg))
 
 @app.route("/encryptCFB", methods=['GET'])
 @cross_origin(supports_credentials=True)
@@ -412,7 +412,7 @@ def encryptCFB():
     val = str(request.args.get('input'))
 
     key = val.partition(".")[0]
-    msg= val.partition(".")[2]
+    msg = val.partition(".")[2]
 
     return(jsonify(AESCipher(key).eCFB(msg)))
 
@@ -462,9 +462,7 @@ def decryptCBC():
     val = str(request.args.get('input'))
 
     key = val.partition(".")[0]
-    msg= val.partition(".")[2]
-
-    p = AESCipher(key).eCBC(msg)
+    p = val.partition(".")[2]
 
     return(jsonify(AESCipher(key).dCBC(p)))
 
@@ -474,9 +472,9 @@ def decryptCFB():
     val = str(request.args.get('input'))
 
     key = val.partition(".")[0]
-    msg= val.partition(".")[2]
+    p = val.partition(".")[2]
 
-    p = AESCipher(key).eCBC(msg)
+   
 
     return(jsonify(AESCipher(key).dCFB(p)))
 
@@ -486,9 +484,7 @@ def decryptOFB():
     val = str(request.args.get('input'))
 
     key = val.partition(".")[0]
-    msg= val.partition(".")[2]
-
-    p = AESCipher(key).eCBC(msg)
+    p = val.partition(".")[2]
 
     return(jsonify(AESCipher(key).dOFB(p)))
 
@@ -498,9 +494,7 @@ def decryptCTR():
     val = str(request.args.get('input'))
 
     key = val.partition(".")[0]
-    msg= val.partition(".")[2]
-
-    p = AESCipher(key).eCBC(msg)
+    p = val.partition(".")[2]
 
     return(jsonify(AESCipher(key).dCTR(p)))
 
@@ -510,9 +504,8 @@ def decryptGCM():
     val = str(request.args.get('input'))
 
     key = val.partition(".")[0]
-    msg= val.partition(".")[2]
+    p = val.partition(".")[2]
 
-    p = AESCipher(key).eCBC(msg)
 
     return(jsonify(AESCipher(key).dGCM(p)))
 
@@ -522,9 +515,8 @@ def decryptECB():
     val = str(request.args.get('input'))
 
     key = val.partition(".")[0]
-    msg= val.partition(".")[2]
+    p = val.partition(".")[2]
     
-    p = AESCipher(key).eCBC(msg)
 
     return(jsonify(AESCipher(key).dECB(p)))
 
