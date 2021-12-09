@@ -369,31 +369,7 @@ def nott():
         
     return jsonify(~val1)
 
-@app.route("/encryptEAX", methods=["GET"])
-@cross_origin(supports_credentials=True)
-def encryptEAX():
-    
-    val = str(request.args.get('input'))
 
-    nonce, ciphertext, tag = eEAX(val)
-
-    return jsonify("Ciphertext: " + str(ciphertext) + "\nNonce: " + str(nonce))
-
-
-@app.route("/decryptEAX", methods=["GET"])
-@cross_origin(supports_credentials=True)
-def decryptEAX():
-    val = str(request.args.get('input'))
-    
-    val1 = val.partition(".")[0]
-    val2 = val.partition(".")[2]
-
-    nonce = bytes(create_jsonlines(val1), encoding='utf8')
-
-
-    plaintext = dEAX(nonce, val2)
-
-    return jsonify(plaintext)
 
 @app.route("/encryptCBC", methods=['GET'])
 @cross_origin(supports_credentials=True)

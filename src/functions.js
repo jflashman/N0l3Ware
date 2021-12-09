@@ -90,19 +90,19 @@ const functions = [
         showChildren: true,
         children: [
             {
-                name: "Xor",
+                name: "Xor Format \'Value xor Value\'",
                 url: 'xor'
             },
             {
-                name: "Or",
+                name: "Or Format \'Value or Value\'",
                 url: "or"
             },
             {
-                name: "And",
+                name: "And Format \'Value and Value\'",
                 url: "and"
             },
             {
-                name: "Not",
+                name: "Not Format \'Value not Value\'",
                 url: "not"
             }
         ]
@@ -122,31 +122,27 @@ const functions = [
         hasChildren: true,
         children: [
             {
-                name: "EAX",
-                url: "encryptEAX"
-            },
-            {
                 name: "CBC Format \'Key.Msg\'",
                 url: "encryptCBC"
             },
             {
-                name: "CFB \'Format Key.Msg\'",
+                name: "CFB Format \'Key.Msg\'",
                 url: "encryptCFB"
             },
             {
-                name: "OFB \'Format Key.Msg\'",
+                name: "OFB Format \'Key.Msg\'",
                 url: "encryptOFB"
             },
             {
-                name: "CTR \'Format Key.Msg\'",
+                name: "CTR Format \'Key.Msg\'",
                 url: "encryptCTR"
             },
             {
-                name: "GCM \'Format Key.Msg\'",
+                name: "GCM Format \'Key.Msg\'",
                 url: "encryptGCM"
             },
             {
-                name: "ECB \'Format Key.Msg\'",
+                name: "ECB Format \'Key.Msg\'",
                 url: "encryptECB"
             },
         ]
@@ -157,31 +153,27 @@ const functions = [
         hasChildren: true,
         children: [
             {
-                name: "EAX Format \'Nonce.Msg\'",
-                url: "decryptEAX"
-            },
-            {
                 name: "CBC Format \'Key.Msg\'",
                 url: "decryptCBC"
             },
             {
-                name: "CFB \'Format Key.Msg\'",
+                name: "CFB Format \'Key.Msg\'",
                 url: "decryptCFB"
             },
             {
-                name: "OFB \'Format Key.Msg\'",
+                name: "OFB Format \'Key.Msg\'",
                 url: "decryptOFB"
             },
             {
-                name: "CTR \'Format Key.Msg\'",
+                name: "CTR Format \'Key.Msg\'",
                 url: "decryptCTR"
             },
             {
-                name: "GCM \'Format Key.Msg\'",
+                name: "GCM Format \'Key.Msg\'",
                 url: "decryptGCM"
             },
             {
-                name: "ECB \'Format Key.Msg\'",
+                name: "ECB Format \'Key.Msg\'",
                 url: "decryptECB"
             },
             
