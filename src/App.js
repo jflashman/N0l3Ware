@@ -88,7 +88,7 @@ const TopBar = () => {
   return (
     <div style={styles.topbar}>
       <Grid item>
-        <Typography variant='h4'>Nol3Ware </Typography>
+        <Typography variant='h4'>N0l3Ware </Typography>
       </Grid>
       <Grid >
         <Link href='#' variant='h5' marginRight='1rem' >About/Support</Link>
