@@ -1,0 +1,90 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+.main-container {
+  height: 93vh;
+  width: 100vw;
+  display: flex;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.topbar ul {
+  display: flex;
+  list-style-type: none;
+  text-decoration: none;
+}
+
+.topbar li {
+  padding-left: 10px;
+}
+.sidebar {
+  height: 102%;
+  width: 20%;
+  background-color: #f5f5f5;
+}
+
+.sidebar h3 {
+  border: 1px solid grey;
+  padding: 10px;
+}
+
+.recipe-bar {
+  height: 100%;
+  width: 30%;
+}
+
+.recipe-bar h3 {
+  border: 1px solid grey;
+  padding: 10px;
+  background-color: #f5f5f5;
+}
+
+.recipe-space {
+  height: 87%;
+  border: 2px solid #f5f5f5;
+}
+
+.button-space {
+  display: flex;
+  background-color: #f5f5f5;
+  padding: 7px;
+  align-items: center;
+}
+.button-space button {
+  margin: auto;
+  width: 50%;
+  padding: 15px;
+  border-radius: 20px;
+  background-color: #47bf5b;
+  border: none;
+  color: white;
+}
+
+.input-output {
+  height: 100%;
+  width: 48%;
+}
+
+.input-output h3 {
+  border: 1px solid grey;
+  padding: 10px;
+  background-color: #f5f5f5;
+}
+
+.input-section {
+  height: 50%;
+}
+
+.ouput-section {
+  height: 50%;
+}
