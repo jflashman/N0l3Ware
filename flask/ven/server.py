@@ -9,7 +9,6 @@ from collections import Counter
 from matplotlib import pyplot as plt
 from os import remove
 import base64
-import json
 import hashlib
 
 
@@ -522,10 +521,11 @@ def freqanaly():
     with open('plot.png', mode='rb') as file:
         
         read_in = file.read()
-        plot['img'] = base64.encodebytes(read_in).decode('utf-8')
+        plot = base64.encodebytes(read_in).decode('utf-8')
 
+    plot.replace("\n", "")
     remove('plot.png')
-    return jsonify(json.dumps(plot))
+    return jsonify(plot)
 
 if __name__ == "__main__":
     app.run(debug=True)
