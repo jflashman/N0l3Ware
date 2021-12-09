@@ -80,7 +80,7 @@ const functions = [
             {
                 name: "Decimal to Binary",
                 url: 'dec2bin'
-            }
+            },
         ]
     },
     {
@@ -108,8 +108,8 @@ const functions = [
         ]
     },
     {
-        name: 'Translations',
-        url: 'translate',
+        name: 'Frequency Analysis',
+        url: 'freqanaly',
         hasChildren: false,
         children: [],
         showChildren: false
@@ -179,8 +179,9 @@ const functions = [
             
         ],
         showChildren: false
-
     }
+    
+
 ]
 
 export default functions;

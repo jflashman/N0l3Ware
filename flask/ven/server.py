@@ -4,8 +4,12 @@ from Crypto.Hash import MD2
 from Cryptodome import Random
 from Cryptodome.Cipher import AES
 from Cryptodome.Protocol.KDF import scrypt
-from base64 import b64encode, b64decode
 from secrets import token_bytes
+from collections import Counter
+from matplotlib import pyplot as plt
+from os import remove
+import base64
+import json
 import hashlib
 
 
@@ -40,78 +44,78 @@ class AESCipher(object):
         iv = Random.new().read(self.block_size)
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
         encrypted_text = cipher.encrypt(plain_text.encode())
-        return b64encode(iv + encrypted_text).decode("utf-8")
+        return base64.b64encode(iv + encrypted_text).decode("utf-8")
 
     def eCFB(self, plain_text):
         plain_text = self.__pad(plain_text)
         iv = Random.new().read(self.block_size)
         cipher = AES.new(self.key, AES.MODE_CFB, iv)
         encrypted_text = cipher.encrypt(plain_text.encode())
-        return b64encode(iv + encrypted_text).decode("utf-8")
+        return base64.b64encode(iv + encrypted_text).decode("utf-8")
 
     def eOFB(self, plain_text):
         plain_text = self.__pad(plain_text)
         iv = Random.new().read(self.block_size)
         cipher = AES.new(self.key, AES.MODE_OFB, iv)
         encrypted_text = cipher.encrypt(plain_text.encode())
-        return b64encode(iv + encrypted_text).decode("utf-8")
+        return base64.b64encode(iv + encrypted_text).decode("utf-8")
 
     def eCTR(self, plain_text):
         plain_text = self.__pad(plain_text)
         cipher = AES.new(self.key, AES.MODE_CTR)
         encrypted_text = cipher.encrypt(plain_text.encode())
-        return b64encode(encrypted_text).decode("utf-8")
+        return base64.b64encode(encrypted_text).decode("utf-8")
 
     def eGCM(self, plain_text):
         plain_text = self.__pad(plain_text)
         cipher = AES.new(self.key, AES.MODE_GCM)
         encrypted_text = cipher.encrypt(plain_text.encode())
-        return b64encode(encrypted_text).decode("utf-8")
+        return base64.b64encode(encrypted_text).decode("utf-8")
 
     def eECB(self, plain_text):
         plain_text = self.__pad(plain_text)
         cipher = AES.new(self.key, AES.MODE_ECB)
         encrypted_text = cipher.encrypt(plain_text.encode())
-        return b64encode(encrypted_text).decode("utf-8")
+        return base64.b64encode(encrypted_text).decode("utf-8")
 
 
 
     def dCBC(self, encrypted_text):
-        encrypted_text = b64decode(encrypted_text)
+        encrypted_text = base64.b64decode(encrypted_text)
         iv = encrypted_text[:self.block_size]
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
         plain_text = cipher.decrypt(encrypted_text[self.block_size:]).decode("utf-8")
         return self.__unpad(plain_text)
 
     def dCFB(self, encrypted_text):
-        encrypted_text = b64decode(encrypted_text)
+        encrypted_text = base64.b64decode(encrypted_text)
         iv = encrypted_text[:self.block_size]
         cipher = AES.new(self.key, AES.MODE_CFB, iv)
         plain_text = cipher.decrypt(encrypted_text[self.block_size:]).decode("utf-8")
         return self.__unpad(plain_text)
 
     def dOFB(self, encrypted_text):
-        encrypted_text = b64decode(encrypted_text)
+        encrypted_text = base64.b64decode(encrypted_text)
         iv = encrypted_text[:self.block_size]
         cipher = AES.new(self.key, AES.MODE_OFB, iv)
         plain_text = cipher.decrypt(encrypted_text[self.block_size:])
         return self.__unpad(plain_text)
 
     def dCTR(self, encrypted_text):
-        encrypted_text = b64decode(encrypted_text)
+        encrypted_text = base64.b64decode(encrypted_text)
         cipher = AES.new(self.key, AES.MODE_CTR)
         plain_text = cipher.decrypt(encrypted_text[self.block_size:])
         return self.__unpad(plain_text)
 
     def dGCM(self, encrypted_text):
-        encrypted_text = b64decode(encrypted_text)
+        encrypted_text = base64.b64decode(encrypted_text)
         iv = encrypted_text[:self.block_size]
         cipher = AES.new(self.key, AES.MODE_GCM, iv)
         plain_text = cipher.decrypt(encrypted_text[self.block_size:])
         return self.__unpad(plain_text)
 
     def gECB(self, encrypted_text):
-        encrypted_text = b64decode(encrypted_text)
+        encrypted_text = base64.b64decode(encrypted_text)
         cipher = AES.new(self.key, AES.MODE_ECB)
         plain_text = cipher.decrypt(encrypted_text[self.block_size:])
         return self.__unpad(plain_text)
@@ -495,6 +499,33 @@ def decryptECB():
     
 
     return(jsonify(AESCipher(key).dECB(p)))
+
+@app.route("/freqanaly", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def freqanaly():
+    val = str(request.args.get('input'))
+
+    c = Counter(val)
+    keys = []
+    values = []
+    for item in c.keys():
+        keys.append(str(item))
+
+    for item in c.values():
+        values.append(int(item))
+
+    plt.yticks(range(len(values)))
+    plt.bar(keys, values, align='center')
+    plt.savefig('test.png') 
+
+    data = {}
+    with open('test.png', mode='rb') as fin:
+        
+        read_in = fin.read()
+        data['img'] = base64.encodebytes(read_in).decode('utf-8')
+
+    remove('test.png')
+    return jsonify(json.dumps(data))
 
 if __name__ == "__main__":
     app.run(debug=True)
