@@ -1,5 +1,8 @@
 # N0l3Ware 
-	N0l3Ware is a final group project for COP4090L, Software Engineering Capstone.<br/>Group member contributions can be seen in the course documentation provided below.<br/>Our goal in this project was to recreate some of the environment and features of CyberChef to gain a greater understanding of <br/>frontend/backend integration, API usage, and security algoriths and methodology. 
+	N0l3Ware is a final group project for COP4090L, Software Engineering Capstone. 
+	Group member contributions can be seen in the course documentation provided below. 
+	Our goal in this project was to recreate some of the environment and features of CyberChef to gain a greater 
+	understanding of frontend/backend integration, API usage, and security algoriths and methodology. 
 	
 	Language: Python3
 	Framework: Flask/React
